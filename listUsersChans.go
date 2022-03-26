@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 )
 
@@ -37,6 +36,5 @@ func GetChannelsForUser(username string, hostname string) (*APIAccountsChannelsR
 		return nil, err
 	}
 
-	log.Println("printing")
 	return result, nil
 }
