@@ -77,6 +77,13 @@ func DecryptStr(data []byte, passwd string) (string, error) {
 
 	plaintext, err := gcm.Open(nil, nonce, ciphertext, nil)
 	if err != nil {
+		/*
+			TODO: What type is error if wrong password
+			entered for decryption?
+		*/
+		if err.Error() == DecryptFailed.Error() {
+			err = DecryptFailed
+		}
 		return "", err
 	}
 	return string(plaintext), nil

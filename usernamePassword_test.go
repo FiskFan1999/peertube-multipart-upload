@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"testing"
 )
 
@@ -49,7 +50,7 @@ func TestEncryptionDecryption(t *testing.T) {
 	decrypted, err = DecryptStr(encrypted, password+"wrong")
 	if err == nil {
 		t.Error("On decryption with wrong password, should have passed error but didn't.")
-	} else if err != nil && err.Error() == DecryptFailed.Error() {
+	} else if err != nil && errors.Is(err, DecryptFailed) {
 		t.Log("On failed password on decrypt, correctly passwed decryptfailederror")
 	} else if decrypted != data {
 		t.Error("Encryption and decryption did not succeed.")
