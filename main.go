@@ -5,6 +5,10 @@ import (
 	"os"
 )
 
+const (
+	TESTSERVERHOSTNAME = "https://peertube.cpy.re"
+)
+
 func main() {
 	log.Println("peertube-multipart-upload")
 
