@@ -27,5 +27,5 @@ func TestGetUserTokenFromAPI(t *testing.T) {
 		}
 		t.Errorf("GetUserTokenFromAPI error %+v", err)
 	}
-	t.Log(token)
+	t.Logf("Token recieved, len=%d", len(token))
 }
