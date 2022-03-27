@@ -6,7 +6,7 @@ import (
 )
 
 func ListUserChansHandler() {
-	hostname, hnok := os.LookupEnv("PTHOST")
+	hostnamer, hnok := os.LookupEnv("PTHOST")
 	username, unok := os.LookupEnv("PTUSER")
 
 	if !hnok || !unok {
@@ -14,6 +14,7 @@ func ListUserChansHandler() {
 		log.Printf("PTHOST='https://example.net' PTUSER=username %s channels", os.Args[0])
 		return
 	}
+	hostname := CleanHostname(hostnamer)
 
 	var channels *APIAccountsChannelsResponse
 	channels, err := GetChannelsForUser(username, hostname)

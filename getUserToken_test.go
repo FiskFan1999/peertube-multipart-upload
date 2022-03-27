@@ -7,7 +7,7 @@ import (
 )
 
 func TestGetUserTokenFromAPI(t *testing.T) {
-	hostname, hnok := os.LookupEnv("PTHOST")
+	hostname, hnok := CleanHostname(os.LookupEnv("PTHOST"))
 	username, unok := os.LookupEnv("PTUSER")
 	password, pwok := os.LookupEnv("PTPASSWD")
 	if !hnok || !unok || !pwok {
