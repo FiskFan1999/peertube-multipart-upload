@@ -28,4 +28,18 @@ func TestGetUserTokenFromAPI(t *testing.T) {
 		t.Errorf("GetUserTokenFromAPI error %+v", err)
 	}
 	t.Logf("Token recieved, len=%d", len(token))
+
+	_, err = GetUserTokenFromAPI(hostname, username, password+"wrong")
+	if err == nil {
+		t.Error("On oauth request with incorrect password, GetUserTokenFromAPI returned true.")
+	} else {
+		if errors.Is(err, ErrorRateLimited) {
+			t.Log("User token generation returned 423, is rate limited. Skipping.")
+			t.Skip()
+		} else if errors.Is(err, IncorrectOauthLogin) {
+			t.Log("Oauth request correctly returned status code 400 bad request on incorrect password")
+		} else {
+			t.Errorf("GetUserTokenFromAPI error %+v (should be 400)", err)
+		}
+	}
 }

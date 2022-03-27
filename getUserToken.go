@@ -18,6 +18,10 @@ type PeertubeUserToken struct {
 	Access_token string
 }
 
+var (
+	IncorrectOauthLogin = errors.New("Oauth token request returned 400 status code, bad login.")
+)
+
 func GetClientLocal(hostname string) (*OauthClientsLocal, error) {
 	/*
 		Get oauth local client via
@@ -73,6 +77,8 @@ func GetUserTokenFromAPI(hostname, username, password string) (string, error) {
 		switch tokenreq.StatusCode {
 		case 423:
 			return "", ErrorRateLimited
+		case 400:
+			return "", IncorrectOauthLogin
 		default:
 			return "", errors.New(fmt.Sprintf("tokenreq URL %s returned status code %d.", gutUrl, tokenreq.StatusCode))
 		}
