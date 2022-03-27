@@ -1,8 +1,8 @@
 package main
 
 import (
-	"log"
 	"os"
+	"strings"
 )
 
 const (
@@ -10,14 +10,8 @@ const (
 )
 
 func main() {
-	log.Println("peertube-multipart-upload")
-
-	/*
-		reading environment variables example:
-	*/
-	username, uok := os.LookupEnv("PTUNAME")
-	log.Println("environment variable:")
-	log.Println("PTUNAME, ok")
-	log.Println(username, uok)
-
+	if len(os.Args) > 1 && strings.ToLower(os.Args[1]) == "list" {
+		ListUserChansHandler()
+		return
+	}
 }
