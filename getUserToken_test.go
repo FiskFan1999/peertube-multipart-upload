@@ -7,7 +7,7 @@ import (
 )
 
 func TestGetUserTokenFromAPI(t *testing.T) {
-	hostname, hnok := CleanHostname(os.LookupEnv("PTHOST"))
+	hostnamer, hnok := os.LookupEnv("PTHOST")
 	username, unok := os.LookupEnv("PTUSER")
 	password, pwok := os.LookupEnv("PTPASSWD")
 	if !hnok || !unok || !pwok {
@@ -18,6 +18,7 @@ func TestGetUserTokenFromAPI(t *testing.T) {
 		t.Log("Skipping user token test due to no user login provided.")
 		t.Skip()
 	}
+	hostname := CleanHostname(hostnamer)
 	token, err := GetUserTokenFromAPI(hostname, username, password)
 	if err != nil {
 		if errors.Is(err, ErrorRateLimited) {
