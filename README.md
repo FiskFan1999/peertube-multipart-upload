@@ -9,3 +9,6 @@ Refer to the [Peertube API reference](https://docs.joinpeertube.org/api-rest-ref
 - [Cancel](https://docs.joinpeertube.org/api-rest-reference.html#operation/uploadResumableCancel) (Likely won't be implemented, as multipart uploads are automatically cancelled after a certain length of time if they are abandoned)
 
 Note that a `/api/v1/videos/upload-resumable` call will automatically finish the upload when the final part is called.
+
+# Chat
+Please feel free to discuss this project on the OFTC network at #peertube-multipart-upload (also mirrored on oftc).
