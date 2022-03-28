@@ -7,10 +7,10 @@ GIT_TAG := $(shell git tag --points-at HEAD 2> /dev/null | head -n 1)
 all: vers build
 
 build:
-	go build
+	go build -v
 
 install:
-	go install
+	go install -v
 
 vers:
 	echo '{"version":"$(GIT_TAG)", "commit": "$(GIT_COMMIT)"}' > version

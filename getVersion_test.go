@@ -7,7 +7,7 @@ import (
 
 var GetVersionCases map[string]VersStrType = map[string]VersStrType{
 	"{\"version\":\"vers\", \"commit\": \"comm\"}":  {"vers", "comm"},
-	"{\"version\":\"vers2\", \"commit\": \"comm\"}": {"vers", "comm"},
+	"{\"version\":\"vers2\", \"commit\": \"comm\"}": {"vers2", "comm"},
 }
 
 func TestGetVersion(t *testing.T) {
