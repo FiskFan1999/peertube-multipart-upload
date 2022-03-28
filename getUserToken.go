@@ -29,6 +29,9 @@ func GetClientLocal(hostname string) (*OauthClientsLocal, error) {
 	*/
 	clientslocalurl := fmt.Sprintf("%s/api/v1/oauth-clients/local", hostname)
 	clientslocalreq, err := http.Get(clientslocalurl)
+	if err != nil {
+		return nil, err
+	}
 	defer clientslocalreq.Body.Close()
 	if clientslocalreq.StatusCode != 200 {
 		switch clientslocalreq.StatusCode {
@@ -37,9 +40,6 @@ func GetClientLocal(hostname string) (*OauthClientsLocal, error) {
 		default:
 			return nil, errors.New(fmt.Sprintf("clientslocalreq url %s returned status code %d.", clientslocalurl, clientslocalreq.StatusCode))
 		}
-	}
-	if err != nil {
-		return nil, err
 	}
 	body, err := io.ReadAll(clientslocalreq.Body)
 	if err != nil {
@@ -71,6 +71,9 @@ func GetUserTokenFromAPI(hostname, username, password string) (string, error) {
 
 	gutUrl := fmt.Sprintf("%s/api/v1/users/token", hostname)
 	tokenreq, err := http.PostForm(gutUrl, postForm)
+	if err != nil {
+		return "", err
+	}
 	defer tokenreq.Body.Close()
 
 	if tokenreq.StatusCode != 200 {
@@ -84,9 +87,6 @@ func GetUserTokenFromAPI(hostname, username, password string) (string, error) {
 		}
 	}
 
-	if err != nil {
-		return "", err
-	}
 	tokenreqbody, err := io.ReadAll(tokenreq.Body)
 	if err != nil {
 		return "", err
