@@ -1,0 +1,12 @@
+peertube-multipart-upload
+
+FiskFan1999's implementation of Peertube multipart uploading using the API.
+
+usage:
+
+PTHOST=hostname \
+  PTUSER=username \
+  PTPASSWD=password \
+  peertube-multipart-upload
+
+Note that some environment variables may be better suited to be set by .profile, .bash_env, or a similar file, for ease of use.
