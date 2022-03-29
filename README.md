@@ -11,4 +11,4 @@ Refer to the [Peertube API reference](https://docs.joinpeertube.org/api-rest-ref
 Note that a `/api/v1/videos/upload-resumable` call will automatically finish the upload when the final part is called.
 
 # Chat
-Please feel free to discuss this project on the OFTC network at #peertube-multipart-upload (also mirrored on oftc).
+Please feel free to discuss this project on the irc.ergo.chat (note: TLS :6697 only) network at #peertube-multipart-upload [(browser client)](https://ergo.chat/kiwi/#peertube-multipart-upload).
