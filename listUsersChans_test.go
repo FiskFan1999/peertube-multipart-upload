@@ -16,6 +16,7 @@ func TestGetChannelsForUser(t *testing.T) {
 	resp, err := GetChannelsForUser("framasoft@framatube.org", TESTSERVERHOSTNAME)
 	if err != nil {
 		t.Error(err.Error())
+		return
 	}
 
 	/*
