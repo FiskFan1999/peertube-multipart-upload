@@ -26,6 +26,7 @@ func TestGetUserTokenFromAPI(t *testing.T) {
 			t.Skip()
 		}
 		t.Errorf("GetUserTokenFromAPI error %+v", err)
+		return
 	}
 	t.Logf("Token recieved, len=%d", len(token))
 
@@ -40,6 +41,7 @@ func TestGetUserTokenFromAPI(t *testing.T) {
 			t.Log("Oauth request correctly returned status code 400 bad request on incorrect password")
 		} else {
 			t.Errorf("GetUserTokenFromAPI error %+v (should be 400)", err)
+			return
 		}
 	}
 }
