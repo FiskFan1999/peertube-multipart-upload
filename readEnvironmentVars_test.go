@@ -43,7 +43,7 @@ func TestReadEnvironmentVars(t *testing.T) {
 	if !errors.Is(err, ReadEnvVarsFailed) {
 		t.Fatalf("ReadEnvironmentVars on empty environment set should have returned ReadEnvVarsFailed. Returned %+v\n", err)
 	}
-	failtextLength := 5
+	failtextLength := 6
 	if len(failtext) != failtextLength {
 		t.Fatalf("failtext length was not correct size for empty environment. Wanted %d got %d.\n", failtextLength, len(failtext))
 	}
@@ -65,7 +65,7 @@ func TestReadEnvironmentVars(t *testing.T) {
 		"PTHOST":      "host",
 		"PTUSER":      "user",
 		"PTPASSWD":    "passwd",
-		"PTFILE":      "file",
+		"PTFILE":      descfile.Name(), // hacky solution to get working file pointer for this field
 		"PTTITLE":     "title",
 		"PTCAT":       "1",
 		"PTCHAN":      "2",
@@ -88,9 +88,15 @@ func TestReadEnvironmentVars(t *testing.T) {
 		t.Fatalf("On ReadEnvironmentVars with all env variables, should have returend no error but returned %+v\n (Failtest %+v)", err, (failtext))
 	}
 
+	/*
+		Different file pointers lead to
+		deep equal to be false
+	*/
+	input.File = nil
 	for _, v := range trueStrs {
 		stuff["PTNSFW"] = v
 		input2, err, failtext := ReadEnvironmentVars()
+		input2.File = nil
 		if err != nil || len(failtext) != 0 || !reflect.DeepEqual(input2, input) {
 			t.Fatalf("For using value %s for true, did not work or result in the same input. Error \"%+v\" len(failtext) == %d\n", v, err, len(failtext))
 		}
@@ -99,6 +105,7 @@ func TestReadEnvironmentVars(t *testing.T) {
 	for _, v := range falseStrs {
 		stuff["PTCOMMENTS"] = v
 		input2, err, failtext := ReadEnvironmentVars()
+		input2.File = nil
 		if err != nil || len(failtext) != 0 || !reflect.DeepEqual(input2, input) {
 			t.Fatalf("For using value %s for false, did not work or result in the same input. Error \"%+v\" len(failtext) == %d\n", v, err, len(failtext))
 		}

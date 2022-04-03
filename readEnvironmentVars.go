@@ -24,6 +24,7 @@ var (
 		"n",
 		"0",
 	}
+	VideoChunkSize VideoFileByteCounter = 1024 * 1024 * 2
 )
 
 func ReadEnvironmentVars() (input MultipartUploadHandlerHandlerInput, erro error, failtext []string) {
@@ -33,12 +34,13 @@ func ReadEnvironmentVars() (input MultipartUploadHandlerHandlerInput, erro error
 	tagsraw := new(string)
 	descfile := new(string)
 	suppfile := new(string)
+	videofilename := new(string)
 
 	var StringReqEnvVars map[string](*string) = map[string](*string){
 		"PTHOST":   &input.Hostname,
 		"PTUSER":   &input.Username,
 		"PTPASSWD": &input.Password,
-		"PTFILE":   &input.Filename,
+		"PTFILE":   videofilename,
 		"PTTITLE":  &input.DisplayName,
 	}
 	var StringEnvVars map[string](*string) = map[string](*string){
@@ -78,6 +80,13 @@ func ReadEnvironmentVars() (input MultipartUploadHandlerHandlerInput, erro error
 	input.Tags, err, _ = GetTagsFromEnv(*tagsraw)
 	if err != nil {
 		failtext = append(failtext, fmt.Sprintf("Tags error: %+v\n", err))
+		fail = true
+	}
+
+	// set video file
+	input.File, err = GetVideoFileReader(*videofilename, VideoChunkSize)
+	if err != nil {
+		failtext = append(failtext, fmt.Sprintf("Error when reading video file: \"%+v\"", err))
 		fail = true
 	}
 

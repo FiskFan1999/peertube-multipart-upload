@@ -6,7 +6,7 @@ type MultipartUploadHandlerHandlerInput struct {
 	Password        string
 	ContentType     string
 	ChannelID       int
-	Filename        string
+	File            *VideoFileReader
 	DisplayName     string
 	Privacy         int8
 	Category        int
