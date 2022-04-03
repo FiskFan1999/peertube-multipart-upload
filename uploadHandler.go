@@ -4,7 +4,6 @@ type MultipartUploadHandlerHandlerInput struct {
 	Hostname        string
 	Username        string
 	Password        string
-	ContentLength   int64
 	ContentType     string
 	ChannelID       int
 	Filename        string
