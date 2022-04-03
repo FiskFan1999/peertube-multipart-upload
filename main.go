@@ -21,7 +21,7 @@ func main() {
 		default:
 			log.Printf("unknown arg %s\n", os.Args[1])
 		}
-		return
+		os.Exit(2)
 	}
 
 	/*
