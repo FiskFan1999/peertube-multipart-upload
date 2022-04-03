@@ -57,6 +57,23 @@ func ReadEnvironmentVars() (input MultipartUploadHandlerHandlerInput, erro error
 		*val = os.Getenv(key)
 	}
 
+	// get the text for the description and support
+	if *descfile != "" { // skip if not specified
+		input.DescriptionText, err = GetDescriptionTextFromFilename(*descfile)
+		if err != nil {
+			failtext = append(failtext, fmt.Sprintf("Error while reading description file: %+v\n", err))
+			fail = true
+		}
+	}
+
+	if *suppfile != "" {
+		input.SupportText, err = GetDescriptionTextFromFilename(*suppfile)
+		if err != nil {
+			failtext = append(failtext, fmt.Sprintf("Error while reading support text file: %+v\n", err))
+			fail = true
+		}
+	}
+
 	// set tags
 	input.Tags, err, _ = GetTagsFromEnv(*tagsraw)
 	if err != nil {
