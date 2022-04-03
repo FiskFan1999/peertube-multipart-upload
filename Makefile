@@ -14,3 +14,5 @@ install:
 
 vers:
 	echo '{"version":"$(GIT_TAG)", "commit": "$(GIT_COMMIT)"}' > version
+spell:
+	npx spellchecker-cli *.txt *.md LICENSE -d .dictionary

@@ -12,7 +12,7 @@ Refer to the [Peertube API reference](https://docs.joinpeertube.org/api-rest-ref
 
 - [Initialize](https://docs.joinpeertube.org/api-rest-reference.html#operation/uploadResumableInit)
 - [Upload](https://docs.joinpeertube.org/api-rest-reference.html#operation/uploadResumable)
-- [Cancel](https://docs.joinpeertube.org/api-rest-reference.html#operation/uploadResumableCancel) (Likely won't be implemented, as multipart uploads are automatically cancelled after a certain length of time if they are abandoned)
+- [Cancel](https://docs.joinpeertube.org/api-rest-reference.html#operation/uploadResumableCancel) (Likely won't be implemented, as multipart uploads are automatically canceled after a certain length of time if they are abandoned)
 
 Note that a `/api/v1/videos/upload-resumable` call will automatically finish the upload when the final part is called.
 

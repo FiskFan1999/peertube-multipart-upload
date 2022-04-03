@@ -17,4 +17,4 @@ jobs:
     - uses: actions/setup-node@v2
       
     - name: spellchecker
-      run: npx spellchecker-cli -f *.txt -d .dictionary
+      run: make spell
