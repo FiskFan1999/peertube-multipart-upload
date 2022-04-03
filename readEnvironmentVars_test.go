@@ -12,6 +12,28 @@ func TestReadEnvironmentVars(t *testing.T) {
 	var err error
 	var failtext []string
 
+	descFileText := "description file text"
+	descfile, err := os.CreateTemp("", "*")
+	if err != nil {
+		t.Fatalf("Error during os.CreateTemp: %+v\n", err)
+	}
+	defer os.Remove(descfile.Name())
+	if _, err = descfile.WriteString(descFileText); err != nil {
+		t.Fatalf("Error during writing to description file: %+v\n", err)
+	}
+	descfile.Close()
+
+	suppFileText := "support file text"
+	suppfile, err := os.CreateTemp("", "*")
+	if err != nil {
+		t.Fatalf("Error during os.CreateTemp: %+v\n", err)
+	}
+	defer os.Remove(suppfile.Name())
+	if _, err = suppfile.WriteString(suppFileText); err != nil {
+		t.Fatalf("Error during writing to description file: %+v\n", err)
+	}
+	suppfile.Close()
+
 	os.Clearenv()
 	defer os.Clearenv()
 
@@ -48,9 +70,9 @@ func TestReadEnvironmentVars(t *testing.T) {
 		"PTCAT":       "1",
 		"PTCHAN":      "2",
 		"PTTAGS":      "abcde,fghij,klmno",
-		"PTDESCFILE":  "desc",
+		"PTDESCFILE":  descfile.Name(),
+		"PTSUPP":      suppfile.Name(),
 		"PTLANG":      "en",
-		"PTSUPP":      "support",
 		"PTCOMMENTS":  "false",
 		"PTDOWNLOADS": "false",
 		"PTNSFW":      "true",
