@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"strings"
 )
@@ -15,10 +16,23 @@ func main() {
 		switch strings.ToLower(os.Args[1]) {
 		case "list":
 			ListUserChansHandler()
-			return
 		case "help":
 			FullHelpHandler()
-			return
+		default:
+			log.Printf("unknown arg %s\n", os.Args[1])
 		}
+		return
 	}
+
+	/*
+		Run the multipart upload
+	*/
+	input, err, failtext := ReadEnvironmentVars()
+	if err != nil {
+		log.Println(strings.Join(failtext, "\n"))
+		os.Exit(1)
+	}
+	log.Println()
+	log.Println(input)
+
 }

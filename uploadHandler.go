@@ -1,6 +1,27 @@
 package main
 
-func MultipartUploadHandler() (err error) {
+type MultipartUploadHandlerHandlerInput struct {
+	Hostname        string
+	Username        string
+	Password        string
+	ContentLength   int64
+	ContentType     string
+	ChannelID       int
+	Filename        string
+	DisplayName     string
+	Privacy         int8
+	Category        int
+	CommentsEnabled bool
+	DescriptionText string
+	DownloadEnabled bool
+	Language        string
+	Licence         int
+	NSFW            bool
+	SupportText     string
+	Tags            []string
+}
+
+func MultipartUploadHandler(input MultipartUploadHandlerHandlerInput) (err error) {
 	/*
 		This function handles the entire process
 		of a multipart upload.
@@ -34,7 +55,7 @@ func MultipartUploadHandler() (err error) {
 		-language
 		-licence (int)
 		-nsfw
-		-originallyPublishedAt
+		-originallyPublishedAt (will not handle)
 		-previewfile (will not handle this for now)
 		-scheduleUpdate (will not handle)
 		-support
