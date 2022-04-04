@@ -32,7 +32,9 @@ func main() {
 		log.Println(strings.Join(failtext, "\n"))
 		os.Exit(1)
 	}
-	log.Println()
-	log.Println(input)
+	if err = MultipartUploadHandler(input); err != nil {
+		log.Printf("multipart error %+v\n", err)
+		panic(err)
+	}
 
 }

@@ -34,7 +34,7 @@ var (
 				0, 5, 10, 15, 18,
 			},
 			[]VideoFileByteCounter{
-				5, 10, 15, 18, 18,
+				4, 9, 14, 17, 18,
 			},
 			[]bool{
 				false, false, false, false, true,
@@ -54,7 +54,7 @@ var (
 				0, 8, 16, 24, 31,
 			},
 			[]VideoFileByteCounter{
-				8, 16, 24, 31, 31,
+				7, 15, 23, 30, 31,
 			},
 			[]bool{
 				false, false, false, false, true,

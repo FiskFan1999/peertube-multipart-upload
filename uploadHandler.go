@@ -1,5 +1,15 @@
 package main
 
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
+	"log"
+	"net/http"
+	"strings"
+)
+
 type MultipartUploadHandlerHandlerInput struct {
 	Hostname        string
 	Username        string
@@ -7,6 +17,7 @@ type MultipartUploadHandlerHandlerInput struct {
 	ContentType     string
 	ChannelID       int
 	File            *VideoFileReader
+	FileName        string
 	DisplayName     string
 	Privacy         int8
 	Category        int
@@ -33,6 +44,11 @@ func MultipartUploadHandler(input MultipartUploadHandlerHandlerInput) (err error
 
 		(note possibility of failed authentication)
 	*/
+	oauthToken, err := GetUserTokenFromAPI(input.Hostname, input.Username, input.Password)
+	if err != nil {
+		return
+	}
+	log.Println(oauthToken)
 	/*
 		Initialize the multipart upload via
 		https://docs.joinpeertube.org/api-rest-reference.html#operation/uploadResumableInit
@@ -71,6 +87,61 @@ func MultipartUploadHandler(input MultipartUploadHandlerHandlerInput) (err error
 		-Content-Length (What to do with this?)
 
 	*/
+	client := &http.Client{}
+	initializeUrl := fmt.Sprintf("%s/api/v1/videos/upload-resumable", input.Hostname)
+	initializePayload := map[string]interface{}{
+		"channelId": input.ChannelID,
+		"filename":  input.FileName,
+		"name":      input.DisplayName,
+	}
+	initializePayloadBytes, err := json.Marshal(initializePayload)
+	if err != nil {
+		panic(err)
+	}
+	initialize, err := http.NewRequest("POST", initializeUrl, bytes.NewReader(initializePayloadBytes))
+	if err != nil {
+		panic(err)
+	}
+
+	// add oauth token in header
+	initialize.Header.Add("Authorization", fmt.Sprintf("Bearer %s", oauthToken))
+
+	initialize.Header.Add("X-Upload-Content-Length", fmt.Sprintf("%d", input.File.TotalBytes))
+	initialize.Header.Add("X-Upload-Content-Type", input.ContentType)
+	initialize.Header.Add("Content-Type", "application/json")
+
+	resp, err := client.Do(initialize)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(resp.Status)
+	if resp.StatusCode != 201 {
+		// BAD,
+		log.Printf("initialize api call returned status code %d.", resp.StatusCode)
+		fmt.Println(resp.Header)
+		body, err2 := io.ReadAll(resp.Body)
+		if err2 != nil {
+			panic(err)
+		}
+		defer resp.Body.Close()
+		fmt.Println(string(body))
+		panic("returned non 201 status code")
+	}
+	// response will be in headers
+	fmt.Printf("%+v\n", resp.Header)
+
+	// Get upload location
+	defer resp.Body.Close()
+	uploadLocation := resp.Header.Get("Location")
+
+	if strings.HasPrefix(uploadLocation, "//") {
+		uploadLocation = "https:" + uploadLocation
+	} else {
+		log.Println("Warning: recieved an upload location that doesn't begin with \"//\", i don't know what to do with this.")
+		panic(nil)
+	}
+	fmt.Println("upload location", uploadLocation)
+
 	/*
 		For each part of the file, upload that part
 		via https://docs.joinpeertube.org/api-rest-reference.html#operation/uploadResumable
@@ -92,5 +163,15 @@ func MultipartUploadHandler(input MultipartUploadHandlerHandlerInput) (err error
 		308 (good, not complete)
 		200 (good, last chunk recieved, done.)
 	*/
+	for {
+		chunk, err := input.File.GetNextChunk()
+		if err != nil {
+			panic(err)
+		}
+		if chunk.Finished {
+			break
+		}
+		fmt.Println(chunk.MinByte, chunk.MaxByte, chunk.Length)
+	}
 	return
 }

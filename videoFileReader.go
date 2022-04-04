@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"os"
 )
@@ -33,6 +34,11 @@ func GetVideoFileReader(filename string, chunkSize VideoFileByteCounter) (vfr *V
 	/*
 		Calculate total bytes
 	*/
+	size, err := GetFileSize(filename)
+	if err != nil {
+		return
+	}
+	vfr.TotalBytes = VideoFileByteCounter(size)
 
 	/*
 		Set ChunkSize, and set CurrentMinBytes
@@ -44,11 +50,12 @@ func GetVideoFileReader(filename string, chunkSize VideoFileByteCounter) (vfr *V
 }
 
 type VFRCurrentChunk struct {
-	Bytes    []byte
-	MinByte  VideoFileByteCounter
-	MaxByte  VideoFileByteCounter
-	Length   int
-	Finished bool
+	Bytes       []byte
+	RangeHeader string
+	MinByte     VideoFileByteCounter
+	MaxByte     VideoFileByteCounter
+	Length      int
+	Finished    bool
 }
 
 func (vfr *VideoFileReader) GetNextChunk() (res *VFRCurrentChunk, err error) {
@@ -70,7 +77,8 @@ func (vfr *VideoFileReader) GetNextChunk() (res *VFRCurrentChunk, err error) {
 	}
 
 	res.Length = numBytes
-	res.MaxByte = res.MinByte + VideoFileByteCounter(numBytes) // convert int numBytes to int64
+	res.MaxByte = res.MinByte + VideoFileByteCounter(numBytes) - 1 // convert int numBytes to int64
+	res.RangeHeader = fmt.Sprintf("bytes %d-%d/%d", res.MinByte, res.MaxByte, vfr.TotalBytes)
 	res.Finished = false
 	vfr.CurrentMinBytes += VideoFileByteCounter(numBytes)
 	return
