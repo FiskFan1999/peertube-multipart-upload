@@ -195,12 +195,12 @@ func MultipartUploadHandler(input MultipartUploadHandlerHandlerInput) (err error
 				panic(err2)
 			}
 			fmt.Println(string(body))
-			if resp.StatusCode != 301 && resp.StatusCode != 200 {
+			if resp.StatusCode == 308 || resp.StatusCode == 200 {
 				// 301 = part of upload successful but not done
 				// 200 = part of upload successful and video = done
 				break
 			} else {
-				log.Println("Status code other than 301 or 200 recieved. Will retry.")
+				log.Println("Status code other than 308 or 200 recieved. Will retry.")
 				time.Sleep(15 * time.Second)
 			}
 		}
