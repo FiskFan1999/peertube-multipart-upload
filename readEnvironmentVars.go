@@ -93,9 +93,20 @@ func ReadEnvironmentVars() (input MultipartUploadHandlerHandlerInput, erro error
 		fail = true
 	}
 
-	IntEnvVars := map[string]*int{
+	IntReqEnvVars := map[string]*int{
 		"PTCHAN": &input.ChannelID,
-		"PTCAT":  &input.Category,
+	}
+	IntEnvVars := map[string]*int{
+		"PTCAT": &input.Category,
+	}
+	for key, val := range IntReqEnvVars {
+		var err error
+		env := os.Getenv(key)
+		*val, err = strconv.Atoi(env)
+		if err != nil {
+			failtext = append(failtext, fmt.Sprintf("ERROR: Environment integer variable %s is required and/or was not an integer.\n", key))
+			fail = true
+		}
 	}
 	for key, val := range IntEnvVars {
 		var err error
