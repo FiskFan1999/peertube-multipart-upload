@@ -7,10 +7,6 @@ import (
 	"os"
 )
 
-var (
-	VideoFileMaxChunkSize int = 1024 * 1024
-)
-
 type VideoFileByteCounter int64
 
 type VideoFileReader struct {
