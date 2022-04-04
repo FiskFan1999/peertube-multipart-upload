@@ -59,6 +59,9 @@ func ReadEnvironmentVars() (input MultipartUploadHandlerHandlerInput, erro error
 		*val = os.Getenv(key)
 	}
 
+	// clean hostname
+	input.Hostname = CleanHostname(input.Hostname)
+
 	// get the text for the description and support
 	if *descfile != "" { // skip if not specified
 		input.DescriptionText, err = GetDescriptionTextFromFilename(*descfile)
