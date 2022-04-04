@@ -3,7 +3,6 @@ package main
 import (
 	"os"
 	"reflect"
-	"strings"
 	"testing"
 )
 
@@ -27,8 +26,8 @@ var (
 				[]byte("abcde"),
 				[]byte("12345"),
 				[]byte("hello"),
-				[]byte("bye" + string(byte(0)) + string(byte(0))),
-				[]byte(strings.Repeat(string(byte(0)), 5)),
+				[]byte("bye"),
+				[]byte{},
 			},
 			[]VideoFileByteCounter{
 				0, 5, 10, 15, 18,
@@ -47,8 +46,8 @@ var (
 				[]byte("depicted"),
 				[]byte("sedation"),
 				[]byte("sambaing"),
-				[]byte("goodbye" + NULL),
-				[]byte(strings.Repeat(NULL, 8)),
+				[]byte("goodbye"),
+				[]byte{},
 			},
 			[]VideoFileByteCounter{
 				0, 8, 16, 24, 31,
