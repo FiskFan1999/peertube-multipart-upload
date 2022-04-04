@@ -6,6 +6,9 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"syscall"
+
+	"golang.org/x/term"
 )
 
 var (
@@ -37,11 +40,10 @@ func ReadEnvironmentVars() (input MultipartUploadHandlerHandlerInput, erro error
 	suppfile := new(string)
 
 	var StringReqEnvVars map[string](*string) = map[string](*string){
-		"PTHOST":   &input.Hostname,
-		"PTUSER":   &input.Username,
-		"PTPASSWD": &input.Password,
-		"PTFILE":   &input.FileName,
-		"PTTITLE":  &input.DisplayName,
+		"PTHOST":  &input.Hostname,
+		"PTUSER":  &input.Username,
+		"PTFILE":  &input.FileName,
+		"PTTITLE": &input.DisplayName,
 	}
 	var StringEnvVars map[string](*string) = map[string](*string){
 		"PTTAGS":     tagsraw,
@@ -158,7 +160,27 @@ func ReadEnvironmentVars() (input MultipartUploadHandlerHandlerInput, erro error
 	erro = nil
 	if fail {
 		erro = ReadEnvVarsFailed
+		return
 	}
+
+	/*
+		Get password
+	*/
+	input.Password, erro = PasswordSecret()
+	return
+}
+
+func PasswordSecret() (passwd string, err error) {
+	/*
+		Borrowed from https://stackoverflow.com/a/32768479
+	*/
+	fmt.Print("Enter Password: ")
+	bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+	if err != nil {
+		return
+	}
+	passwd = strings.TrimSpace(string(bytePassword))
+
 	return
 }
 
