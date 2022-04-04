@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type MultipartUploadHandlerHandlerInput struct {
@@ -171,7 +172,38 @@ func MultipartUploadHandler(input MultipartUploadHandlerHandlerInput) (err error
 		if chunk.Finished {
 			break
 		}
-		fmt.Println(chunk.MinByte, chunk.MaxByte, chunk.Length)
+		fmt.Println(chunk.MinByte, chunk.MaxByte, chunk.Length, chunk.RangeHeader)
+
+		for {
+			up, err := http.NewRequest("PUT", uploadLocation, bytes.NewReader(chunk.Bytes))
+			if err != nil {
+				panic(err)
+			}
+
+			up.Header.Add("Authorization", fmt.Sprintf("Bearer %s", oauthToken))
+			up.Header.Add("Content-Length", fmt.Sprintf("%s", chunk.Length))
+			up.Header.Add("Content-Range", chunk.RangeHeader)
+
+			resp, err := client.Do(up)
+			if err != nil {
+				panic(err)
+			}
+			fmt.Println(resp.Status)
+			defer resp.Body.Close()
+			body, err2 := io.ReadAll(resp.Body)
+			if err2 != nil {
+				panic(err2)
+			}
+			fmt.Println(string(body))
+			if resp.StatusCode != 301 || resp.StatusCode != 200 {
+				// 301 = part of upload successful but not done
+				// 200 = part of upload successful and video = done
+				break
+			} else {
+				log.Println("Status code other than 301 or 200 recieved. Will retry.")
+				time.Sleep(15 * time.Second)
+			}
+		}
 	}
 	return
 }

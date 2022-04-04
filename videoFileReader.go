@@ -63,6 +63,13 @@ func (vfr *VideoFileReader) GetNextChunk() (res *VFRCurrentChunk, err error) {
 	res.MinByte = vfr.CurrentMinBytes
 	res.Bytes = make([]byte, vfr.ChunkSize)
 	numBytes, err := vfr.VideoFile.Read(res.Bytes)
+	if numBytes != len(res.Bytes) {
+		newB := make([]byte, numBytes)
+		for i := range newB {
+			newB[i] = res.Bytes[i]
+		}
+		res.Bytes = newB
+	}
 	if errors.Is(err, io.EOF) {
 		/*
 			Previous iteration read all the way to EOF.
